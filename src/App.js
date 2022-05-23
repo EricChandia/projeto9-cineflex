@@ -21,6 +21,7 @@ export default function App(){
     const [cpf, setCPF] = useState("");
     const [displayFooter, setDisplayFooter] = useState(false);
     const [selAssento, setSelAssento] = useState([]);
+    const [selAssentoName, setSelAssentoName] = useState([]);
 
 
     function setarFilme(filme){
@@ -35,9 +36,14 @@ export default function App(){
         <Header />
         <Routes>
             <Route path="/" element={<Init setarFilme={setarFilme}/>}/>
+
+
             <Route path="/filme/:idFilme" element={<Filme filmeNome={filmeNome} filmeImg={filmeImg} setFilmeDia={setFilmeDia} setFilmeHorario={setFilmeHorario} setFilmeWeek={setFilmeWeek}/>}></Route>
-            <Route path="/filme/:idFilme/sessao/:idSessao" element={<Sessoes nome={nome} cpf={cpf} setNome={setNome} setCPF={setCPF} selAssento={selAssento} setSelAssento={setSelAssento}/>}></Route>  
-            <Route path="/filme/:idFilme/sessao/:idSessao/sucesso" element={<Sucesso filmeNome={filmeNome} filmeDia={filmeDia} filmeHorario={filmeHorario} selAssento={selAssento} nome={nome} cpf={cpf} />}></Route>  
+            
+            <Route path="/filme/:idFilme/sessao/:idSessao" element={<Sessoes nome={nome} cpf={cpf} setNome={setNome} setCPF={setCPF} selAssento={selAssento} setSelAssento={setSelAssento} selAssentoName={selAssentoName} setSelAssentoName={setSelAssentoName} />}></Route>  
+
+            <Route path="/filme/:idFilme/sessao/:idSessao/sucesso" element={<Sucesso filmeNome={filmeNome} filmeDia={filmeDia} filmeHorario={filmeHorario} selAssentoName={selAssentoName} nome={nome} cpf={cpf} />}></Route>  
+
         </Routes>
         {displayFooter ? <Footer filmeNome={filmeNome} filmeImg={filmeImg} filmeHorario={filmeHorario} filmeWeek={filmeWeek}/> : <></>}
         

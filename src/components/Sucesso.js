@@ -1,7 +1,11 @@
 import styled from "styled-components";
+import {Link, useNavigate} from "react-router-dom"
 
 
-export default function Sucesso({filmeNome, filmeDia, filmeHorario, selAssento, nome, cpf}){
+
+export default function Sucesso({filmeNome, filmeDia, filmeHorario, selAssentoName, nome, cpf}){
+    const navigate = useNavigate();
+    
 
 
     return(
@@ -11,14 +15,13 @@ export default function Sucesso({filmeNome, filmeDia, filmeHorario, selAssento, 
             <p><Sub>{filmeNome}</Sub></p>
             <p><Sub>{filmeDia} {filmeHorario}</Sub></p>
             <Titulo>Ingressos</Titulo>
-            {selAssento.map(assento => 
-                <p><Sub>{assento}</Sub></p>
+            {selAssentoName.map(assento => 
+                <p><Sub>Assento {assento}</Sub></p>
             )}
             <Titulo>Comprador</Titulo>
             <p><Sub>Nome: {nome}</Sub></p>
             <p><Sub>CPF: {cpf}</Sub></p>
-            <BotaoHome>Voltar para Home</BotaoHome>
-
+            <BotaoHome onClick={() => navigate("/")}>Voltar para Home</BotaoHome>
         </ReservaSucesso>
     );
 }

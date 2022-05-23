@@ -4,17 +4,41 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function ListaAssentos({idSessao, selAssento, setSelAssento}){
+function Assentod({assento, selAssento, setSelAssento, selAssentoName, setSelAssentoName}){
 
-    const [assentos, setAssentos] = useState([]);
-
+    const [selecionado, setSelecionado] = useState(false);
 
     function selecionaAssento(assento){
         console.log(assento.id);
-        setSelAssento([...selAssento, assento.id]);
+    
+        if(selAssento.includes(assento.id)){
+            console.log("retira");
+            const index = selAssento.indexOf(assento.id);
+            if (index > -1) {
+                selAssento.splice(index, 1);
+                selAssentoName.splice(index, 1);
+                setSelAssento([...selAssento]);
+                setSelAssentoName([...selAssentoName]);
+              }
+        }else{
+            setSelAssento([...selAssento, assento.id]);
+            setSelAssentoName([...selAssentoName, assento.name]);
+        }
+
+
+        setSelecionado(!selecionado);
     }
 
-    
+
+    return(
+        <Assento onClick={assento.isAvailable ? () => selecionaAssento(assento) : () => {alert("Esse assento não está disponível")}} cor={assento.isAvailable ? (selecionado ? "green" : "cyan") : "pink"}>{assento.name}</Assento>
+
+    );
+}
+
+function ListaAssentos({idSessao, selAssento, setSelAssento, selAssentoName, setSelAssentoName}){
+
+    const [assentos, setAssentos] = useState([]);
 
     useEffect(() => {
         
@@ -31,8 +55,8 @@ function ListaAssentos({idSessao, selAssento, setSelAssento}){
         <>
             {assentos.length === 0 ? "Carregando..." : assentos.map(assento => 
             
-            
-            <Assento onClick={assento.isAvailable ? () => selecionaAssento(assento) : () => {console.log("Indisponível")}} cor={assento.isAvailable ? "cyan" : "pink"}>{assento.name}</Assento>
+            <Assentod assento={assento} selAssento={selAssento} setSelAssento={setSelAssento} selAssentoName={selAssentoName} setSelAssentoName={setSelAssentoName}/>
+
 
             )}
         </>           
@@ -42,11 +66,8 @@ function ListaAssentos({idSessao, selAssento, setSelAssento}){
 }
 
 
-export default function Sessoes({nome, cpf, setNome, setCPF, selAssento, setSelAssento}){
+export default function Sessoes({nome, cpf, setNome, setCPF, selAssento, setSelAssento, selAssentoName, setSelAssentoName}){
     const { idSessao } = useParams();
-    // const [nome, setNome] = useState("");
-    // const [cpf, setCPF] = useState("");
-    //const [selAssento, setSelAssento] = useState([]);
 
 
     const reserva = {
@@ -63,6 +84,20 @@ export default function Sessoes({nome, cpf, setNome, setCPF, selAssento, setSelA
             return(true);
         }
     }
+
+    // if(nome === ""){
+    //     alert("Nome inválido!");
+    //     return(false);
+    // }else if(cpf === ""){
+    //     alert("Cpf inválido!");
+    //     return false;
+        
+    // }else if(selAssento.length === 0){
+    //     alert("Quantidade de assentos inválida!");
+    //     return false;
+    // }else{
+    //     return(true);
+    // }
 
     function reservarAssento(){
         console.log(nome + " " + cpf);
@@ -87,7 +122,8 @@ export default function Sessoes({nome, cpf, setNome, setCPF, selAssento, setSelA
     <SelecioneAssento>
         <Selecione>Selecione o(s) assento(s)</Selecione>
         <Lista>
-            <ListaAssentos idSessao={idSessao} selAssento={selAssento} setSelAssento={setSelAssento}/>
+            <ListaAssentos idSessao={idSessao} selAssento={selAssento} setSelAssento={setSelAssento} selAssentoName={selAssentoName} setSelAssentoName={setSelAssentoName}/>
+        </Lista>
             <Opcoes>
                 <Selecionado><Bolinha cor={"green"}></Bolinha> Selecionado </Selecionado>
                 <Disponivel><Bolinha cor={"cyan"}></Bolinha> Disponível</Disponivel>
@@ -104,12 +140,12 @@ export default function Sessoes({nome, cpf, setNome, setCPF, selAssento, setSelA
                         <ReservarAssento onClick={reservarAssento}>Reservar assento(s)</ReservarAssento>
                     </Link>
                 :
-                    <ReservarAssento onClick={reservarAssento}>Reservar assento(s)</ReservarAssento>
+                    <></>
             }
 
             
             <Espaco></Espaco>
-        </Lista>
+        
     </SelecioneAssento>
 
     );
@@ -147,7 +183,7 @@ const Formulario = styled.div`
 
 
     input{
-    width: 90%;
+    width: 95%;
     height: 45px;
 
     font-family: 'Roboto';
@@ -200,6 +236,8 @@ const Lista = styled.div`
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+
+    
 `
 
 const Espaco = styled.div`
