@@ -2,10 +2,19 @@ import axios from "axios";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-function ListaAssentos({idSessao}){
+function ListaAssentos({idSessao, selAssento, setSelAssento}){
 
     const [assentos, setAssentos] = useState([]);
+
+
+    function selecionaAssento(assento){
+        console.log(assento.id);
+        setSelAssento([...selAssento, assento.id]);
+    }
+
+    
 
     useEffect(() => {
         
@@ -21,7 +30,11 @@ function ListaAssentos({idSessao}){
     return(
         <>
             {assentos.length === 0 ? "Carregando..." : assentos.map(assento => 
-            <Assento cor={assento.isAvailable ? "cyan" : "pink"}>{assento.name}</Assento>)}
+            
+            
+            <Assento onClick={assento.isAvailable ? () => selecionaAssento(assento) : () => {console.log("Indisponível")}} cor={assento.isAvailable ? "cyan" : "pink"}>{assento.name}</Assento>
+
+            )}
         </>           
     );
     
@@ -29,15 +42,52 @@ function ListaAssentos({idSessao}){
 }
 
 
-export default function Sessoes(){
+export default function Sessoes({nome, cpf, setNome, setCPF, selAssento, setSelAssento}){
     const { idSessao } = useParams();
+    // const [nome, setNome] = useState("");
+    // const [cpf, setCPF] = useState("");
+    //const [selAssento, setSelAssento] = useState([]);
 
+
+    const reserva = {
+        ids: selAssento,
+        name: nome,
+        cpf: cpf
+    } 
+    
+    function validaInformacoes(){
+
+        if(nome === "" || cpf === "" || selAssento.length === 0){
+            return(false);
+        }else{
+            return(true);
+        }
+    }
+
+    function reservarAssento(){
+        console.log(nome + " " + cpf);
+        console.log(selAssento);
+
+        if(validaInformacoes() === false){
+            alert("Informações inválidas!")
+        }else{
+
+            console.log("Reserva: " + reserva);
+
+            const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", reserva);
+
+            promise.then(resposta => {console.log("Resposta: " + resposta.data)});
+        }
+
+
+
+    }
 
     return(
     <SelecioneAssento>
         <Selecione>Selecione o(s) assento(s)</Selecione>
         <Lista>
-            <ListaAssentos idSessao={idSessao}/>
+            <ListaAssentos idSessao={idSessao} selAssento={selAssento} setSelAssento={setSelAssento}/>
             <Opcoes>
                 <Selecionado><Bolinha cor={"green"}></Bolinha> Selecionado </Selecionado>
                 <Disponivel><Bolinha cor={"cyan"}></Bolinha> Disponível</Disponivel>
@@ -45,11 +95,19 @@ export default function Sessoes(){
             </Opcoes>
             <Formulario>
                 Nome do comprador:
-                <input placeholder="Digite seu nome..."></input>
+                <input value={nome}  onChange={e => setNome(e.target.value)} placeholder="Digite seu nome..."></input>
                 CPF do comprador:
-                <input placeholder="Digite seu CPF..."></input>
+                <input value={cpf}  onChange={e => setCPF(e.target.value)}  placeholder="Digite seu CPF..."></input>
             </Formulario>
-            <ReservarAssento>Reservar assento(s)</ReservarAssento>
+            {validaInformacoes() ? 
+                    <Link style={{  textDecoration: 'none' }} to={`sucesso`}>
+                        <ReservarAssento onClick={reservarAssento}>Reservar assento(s)</ReservarAssento>
+                    </Link>
+                :
+                    <ReservarAssento onClick={reservarAssento}>Reservar assento(s)</ReservarAssento>
+            }
+
+            
             <Espaco></Espaco>
         </Lista>
     </SelecioneAssento>

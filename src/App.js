@@ -7,6 +7,7 @@ import Filme from "./components/Filme.js";
 import Footer from "./components/Footer.js";
 import { useState } from "react";
 import Sessoes from "./components/Sessoes.js";
+import Sucesso from "./components/Sucesso.js"
 
 export default function App(){
 
@@ -16,9 +17,10 @@ export default function App(){
     const [filmeDia, setFilmeDia] = useState("");
     const [filmeHorario, setFilmeHorario] = useState();
     const [filmeWeek, setFilmeWeek] = useState();
-    const [comprador, setComprador] = useState("");
-    const [cpf, setCpf] = useState("");
+    const [nome, setNome] = useState("");
+    const [cpf, setCPF] = useState("");
     const [displayFooter, setDisplayFooter] = useState(false);
+    const [selAssento, setSelAssento] = useState([]);
 
 
     function setarFilme(filme){
@@ -34,7 +36,8 @@ export default function App(){
         <Routes>
             <Route path="/" element={<Init setarFilme={setarFilme}/>}/>
             <Route path="/filme/:idFilme" element={<Filme filmeNome={filmeNome} filmeImg={filmeImg} setFilmeDia={setFilmeDia} setFilmeHorario={setFilmeHorario} setFilmeWeek={setFilmeWeek}/>}></Route>
-            <Route path="/filme/:idFilme/sessao/:idSessao" element={<Sessoes/>}></Route>  
+            <Route path="/filme/:idFilme/sessao/:idSessao" element={<Sessoes nome={nome} cpf={cpf} setNome={setNome} setCPF={setCPF} selAssento={selAssento} setSelAssento={setSelAssento}/>}></Route>  
+            <Route path="/filme/:idFilme/sessao/:idSessao/sucesso" element={<Sucesso filmeNome={filmeNome} filmeDia={filmeDia} filmeHorario={filmeHorario} selAssento={selAssento} nome={nome} cpf={cpf} />}></Route>  
         </Routes>
         {displayFooter ? <Footer filmeNome={filmeNome} filmeImg={filmeImg} filmeHorario={filmeHorario} filmeWeek={filmeWeek}/> : <></>}
         
