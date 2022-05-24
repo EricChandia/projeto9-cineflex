@@ -3,10 +3,14 @@ import {Link, useNavigate} from "react-router-dom"
 
 
 
-export default function Sucesso({filmeNome, filmeDia, filmeHorario, selAssentoName, nome, cpf}){
+export default function Sucesso({filmeNome, filmeDia, filmeHorario, selAssentoName, nome, cpf, setDisplayFooter}){
     const navigate = useNavigate();
     
+    function voltarHome(){
 
+        setDisplayFooter(false);
+        navigate("/");
+    }
 
     return(
         <ReservaSucesso>
@@ -21,7 +25,7 @@ export default function Sucesso({filmeNome, filmeDia, filmeHorario, selAssentoNa
             <Titulo>Comprador</Titulo>
             <p><Sub>Nome: {nome}</Sub></p>
             <p><Sub>CPF: {cpf}</Sub></p>
-            <BotaoHome onClick={() => navigate("/")}>Voltar para Home</BotaoHome>
+            <BotaoHome onClick={() => voltarHome()}>Voltar para Home</BotaoHome>
         </ReservaSucesso>
     );
 }
